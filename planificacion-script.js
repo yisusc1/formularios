@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const SCRIPT_URL = 'URL_DE_TU_SCRIPT_IMPLEMENTADO'; // <-- USA LA MISMA URL QUE EN LOS OTROS SCRIPTS
     const form = document.getElementById('planificacionForm');
     const pendingListContainer = document.getElementById('pending-list-container');
     const loadingMessage = document.getElementById('loading-message');
@@ -8,18 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
     google.script.run
         .withSuccessHandler(displayPendingInstallations)
         .withFailureHandler(error => {
-            loadingMessage.textContent = 'Error al cargar las solicitudes. ' + error;
-            loadingMessage.style.color = '#dc3545';
+            pendingListContainer.innerHTML = `<p style="color: #dc3545; font-weight: bold;">Error al cargar: ${error.message || error}</p><p>Por favor, revisa que los nombres de las columnas en la pestaña "Solicitudes" sean correctos.</p>`;
         })
         .getPendingInstallations();
 
     // 2. Función para mostrar las solicitudes en el HTML
     function displayPendingInstallations(installations) {
-        loadingMessage.style.display = 'none';
         if (installations.length === 0) {
-            pendingListContainer.innerHTML = '<p>No hay solicitudes pendientes por asignar.</p>';
+            loadingMessage.textContent = 'No hay solicitudes pendientes por asignar.';
             return;
         }
+        loadingMessage.style.display = 'none';
 
         let html = '<ul style="list-style: none; padding: 0; margin: 0;">';
         installations.forEach(inst => {
@@ -52,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formType: 'planificacion',
             fecha_asignada: document.getElementById('fecha-asignada').value,
             equipo_asignado: document.getElementById('equipo-asignado').value,
-            ids_solicitudes: idsSeleccionadas.join(',')
+            ids_solicitudes: idsSeleccionadas
         };
 
         const submitButton = form.querySelector('button[type="submit"]');
@@ -61,23 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.disabled = true;
         submitButton.textContent = 'Guardando...';
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Importante para Google Scripts cuando no se maneja la respuesta directa
-            redirect: 'follow',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(formData)
-        })
-        .then(() => {
-            statusMessage.className = 'status-message success';
-            statusMessage.textContent = '¡Planificación guardada con éxito! La página se recargará.';
-            setTimeout(() => location.reload(), 2000);
-        })
-        .catch(error => {
-            statusMessage.className = 'status-message error';
-            statusMessage.textContent = `Error: ${error.message}`;
-            submitButton.disabled = false;
-            submitButton.textContent = 'Guardar Planificación';
-        });
+        google.script.run
+            .withSuccessHandler(response => {
+                const res = JSON.parse(response);
+                if (res.result !== 'success') throw new Error(res.message);
+                
+                statusMessage.className = 'status-message success';
+                statusMessage.textContent = '¡Planificación guardada con éxito! La página se recargará.';
+                setTimeout(() => location.reload(), 2000);
+            })
+            .withFailureHandler(error => {
+                statusMessage.className = 'status-message error';
+                statusMessage.textContent = `Error: ${error.message || error}`;
+                submitButton.disabled = false;
+                submitButton.textContent = 'Guardar Planificación';
+            })
+            .doPost({ postData: { contents: JSON.stringify(formData) } }); // Llama a doPost
     });
 });
