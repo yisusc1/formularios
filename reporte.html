@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Instalación</title>
+    <link rel="stylesheet" href="minimal-style.css">
+</head>
+<body>
+    <div class="container" id="password-container">
+        <div class="form-header"><h1>Acceso para Instaladores</h1><p>Ingrese la clave para acceder al reporte.</p></div>
+        <form id="password-form">
+            <div class="form-group"><label for="password">Clave de Acceso</label><input type="password" id="password" required></div>
+            <button type="submit" class="btn-primary">Ingresar</button>
+            <div id="password-status"></div>
+        </form>
+    </div>
+    <div class="container" id="form-container" style="display:none;">
+        <div class="form-header"><h1>Reporte de Instalación</h1><p>Llenar los datos técnicos de la instalación.</p></div>
+        <form id="reporteForm">
+            <input type="hidden" name="formType" value="reporte">
+            <div class="grid-columns"><div class="form-group"><label for="fecha-reporte">Fecha</label><input type="date" id="fecha-reporte" name="Fecha" required></div><div class="form-group"><label for="hora">Hora</label><input type="time" id="hora" name="Hora" required></div></div>
+            <div class="form-group"><label for="equipo">Equipo</label><select id="equipo" name="Equipo" required><option value="" disabled selected>Seleccione</option><option value="Equipo A">Equipo A</option><option value="Equipo B">Equipo B</option><option value="Equipo C">Equipo C</option><option value="Equipo D">Equipo D</option><option value="Equipo E">Equipo E</option><option value="Equipo F">Equipo F</option><option value="Equipo G">Equipo G</option><option value="Equipo H">Equipo H</option><option value="Equipo I">Equipo I</option><option value="Equipo J">Equipo J</option></select></div>
+            <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="Cliente" required></div>
+            <div class="grid-columns"><div class="form-group"><label for="siAsignado">SI Asignado</label><input type="text" id="siAsignado" name="SI Asignado"></div><div class="form-group"><label for="pwAsignado">PW Asignado</label><input type="text" id="pwAsignado" name="PW Asignado"></div></div>
+            <div class="grid-columns"><div class="form-group"><label for="mac">MAC</label><input type="text" id="mac" name="MAC"></div><div class="form-group"><label for="precinto">Precinto</label><input type="number" id="precinto" name="Precinto" maxlength="8"></div></div>
+            <div class="grid-columns"><div class="form-group"><label for="onuPon">ONU PON</label><input type="text" id="onuPon" name="ONU PON"></div><div class="form-group"><label for="router">Router</label><input type="text" id="router" name="Router"></div></div>
+            <div class="form-group"><label for="plan">Plan Contratado</label><select id="plan" name="PLAN"><option value="400 MB RESIDENCIAL">400 MB RESIDENCIAL</option><option value="600 MB RESIDENCIAL">600 MB RESIDENCIAL</option><option value="800 MB RESIDENCIAL">800 MB RESIDENCIAL</option><option value="400 MB CORPORATIVO">400 MB CORPORATIVO</option><option value="600 MB CORPORATIVO">600 MB CORPORATIVO</option><option value="800 MB CORPORATIVO">800 MB CORPORATIVO</option></select></div>
+            <div class="grid-columns"><div class="form-group"><label for="vDescarga">V. Descarga (Mbps)</label><input type="text" id="vDescarga" name="V. descarga"></div><div class="form-group"><label for="vSubida">V. Subida (Mbps)</label><input type="text" id="vSubida" name="V. Subida"></div></div>
+            <div class="grid-columns"><div class="form-group"><label for="potenciaNap">Potencia NAP</label><input type="number" step="any" id="potenciaNap" name="Potencia NAP"></div><div class="form-group"><label for="potenciaCliente">Potencia Cliente</label><input type="number" step="any" id="potenciaCliente" name="Potencia Cliente"></div></div>
+            <div class="grid-columns"><div class="form-group"><label for="metrajeUtilizado">Metraje utilizado (m)</label><input type="number" id="metrajeUtilizado" name="Metraje utilizado"></div><div class="form-group"><label for="metrajeDesechado">Metraje desechado (m)</label><input type="number" id="metrajeDesechado" name="Metraje desechado"></div></div>
+            <div class="form-group"><label for="instalacion">Estado de la Instalación</label><select id="instalacion" name="Instalación"><option value="EXITOSA">EXITOSA</option><option value="EN PUNTA">EN PUNTA</option><option value="PENDIENTE">PENDIENTE</option></select></div>
+            <div class="grid-columns"><div class="form-group"><label for="tecnico1">Técnico 1</label><input type="text" id="tecnico1" name="Técnico 1" required></div><div class="form-group"><label for="tecnico2">Técnico 2</label><input type="text" id="tecnico2" name="Técnico 2"></div></div>
+            <div id="status-message" class="status-message"></div>
+            <div class="form-buttons"><button type="submit" class="btn-primary">Guardar y Enviar</button></div>
+        </form>
+    </div>
+    <script src="reporte-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Solicitud</title>
+    <link rel="stylesheet" href="minimal-style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>Nueva Solicitud de Servicio</h1>
+            <p>Complete los datos para procesar la solicitud.</p>
+        </div>
+        <form id="solicitudForm">
+            <input type="hidden" name="formType" value="solicitud">
+            <div class="form-group"><label for="fecha">Fecha de Solicitud</label><input type="date" id="fecha" name="Fecha" required></div>
+            <div class="form-group"><label for="nombre">Nombre y Apellido</label><input type="text" id="nombre" name="Nombre" placeholder="Ej: Ana Pérez" required></div>
+            <div class="form-group"><label for="cedula">Cédula</label><input type="number" id="cedula" name="Cedula" placeholder="V-12345678" min="1000000" max="99999999" required></div>
+            <div class="form-group"><label for="contacto">Teléfono de Contacto</label><input type="tel" id="contacto" name="Contacto" placeholder="0412-1234567" pattern="[0-9]{1,11}" required></div>
+            <div class="form-group"><label for="contacto2">Teléfono 2 (Opcional)</label><input type="tel" id="contacto2" name="Contacto2" pattern="[0-9]{1,11}"></div>
+            <div class="form-group"><label for="ubicacion">Ubicación</label><select id="ubicacion" name="Ubicacion" required><option value="" disabled selected>Seleccione</option><option value="Carrizal">Carrizal</option><option value="Tejerias">Tejerias</option><option value="Puerta Morocha">Puerta Morocha</option><option value="San Diego">San Diego</option><option value="Caracas">Caracas</option><option value="San Antonio">San Antonio</option><option value="Los Teques">Los Teques</option></select></div>
+            <div class="form-group"><label for="municipio">Municipio</label><select id="municipio" name="Municipio" required><option value="" disabled selected>Seleccione</option><option value="Guaicaipuro">Guaicaipuro</option><option value="Los Salias">Los Salias</option><option value="Cecilio Acosta">Cecilio Acosta</option><option value="Libertador">Libertador</option><option value="Carrizal">Carrizal</option><option value="Revenga">Revenga</option><option value="Santos Michelena">Santos Michelena</option><option value="Sucre">Sucre</option><option value="Otro">Otro</option></select></div>
+            <div class="form-group"><label for="sector">Sector</label><input type="text" id="sector" name="Sector" required></div>
+            <div class="form-group"><label for="calle">Calle o Avenida</label><input type="text" id="calle" name="Calle" required></div>
+            <div class="form-group"><label for="casa">Casa o Edificio</label><input type="text" id="casa" name="Casa" required></div>
+            
+            <div class="form-group">
+                <label for="solicitud-coordenadas">Coordenadas (Opcional)</label>
+                <div class="form-group-inline">
+                    <input type="text" id="solicitud-coordenadas" name="Coordenadas" readonly placeholder="Presione el botón para capturar">
+                    <button type="button" id="get-coords-btn" class="btn-secondary">📍</button>
+                </div>
+            </div>
+
+            <div class="form-group"><label for="email">Correo electrónico</label><input type="email" id="email" name="Email" placeholder="ejemplo@correo.com" required></div>
+            <div class="form-group"><label for="servicio">Tipo de Servicio</label><select id="servicio" name="Servicio" required><option value="" disabled selected>Seleccione</option><option value="Domiciliario">Domiciliario</option><option value="Empresarial">Empresarial</option></select></div>
+            <div class="form-group"><label for="disponibilidad">Disponibilidad para Instalación</label><input type="date" id="disponibilidad" name="Disponibilidad" required></div>
+            <div class="form-group"><label for="asesor">Asesor</label><select id="asesor" name="Asesor" required><option value="" disabled selected>Seleccione</option><option value="Yaisen Herrera">Yaisen Herrera</option><option value="Lorena Esqueda">Lorena Esqueda</option><option value="Cindy Infante">Cindy Infante</option><option value="Randy Moreno">Randy Moreno</option><option value="Otro">Otro</option></select><input type="text" id="otro_asesor" name="otro_asesor" class="hidden-field" placeholder="Escriba el nombre del asesor"></div>
+            <div class="form-group"><label for="fuente">¿Cómo nos conoció?</label><select id="fuente" name="Fuente" required><option value="" disabled selected>Seleccione</option><option value="Folleto">Folleto</option><option value="Valla Publicitaria">Valla Publicitaria</option><option value="Evento">Evento</option><option value="Redes Sociales">Redes Sociales</option><option value="Recomendación">Recomendación</option><option value="Otro">Otro</option></select><input type="text" id="otra_fuente" name="otra_fuente" class="hidden-field" placeholder="Escriba el tipo de fuente"></div>
+            <div id="status-message" class="status-message"></div>
+            <div class="form-buttons">
+                <button type="submit" class="btn-primary">Guardar y Enviar</button>
+            </div>
+        </form>
+    </div>
+    <script src="solicitud-script.js"></script>
+</body>
+</html>

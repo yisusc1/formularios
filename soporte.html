@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Soporte</title>
+    <link rel="stylesheet" href="minimal-style.css">
+</head>
+<body>
+    <div class="container" id="password-container">
+        <div class="form-header"><h1>Acceso para Soporte</h1><p>Ingrese la clave para acceder.</p></div>
+        <form id="password-form">
+            <div class="form-group"><label for="password">Clave de Acceso</label><input type="password" id="password" required></div>
+            <button type="submit" class="btn-primary">Ingresar</button>
+            <div id="password-status"></div>
+        </form>
+    </div>
+    <div class="container" id="form-container" style="display:none;">
+        <div class="form-header"><h1>Reporte De Soporte</h1></div>
+        <form id="soporteForm">
+            <input type="hidden" name="formType" value="soporte">
+            <div class="grid-columns"><div class="form-group"><label for="soporte-fecha">Fecha</label><input type="text" id="soporte-fecha" name="Fecha" readonly></div><div class="form-group"><label for="soporte-hora">Hora</label><input type="text" id="soporte-hora" name="Hora" readonly></div></div>
+            <div class="form-group"><label for="soporte-cliente">Cliente (Nombre o PW)</label><input type="text" id="soporte-cliente" name="Cliente" required></div>
+            <div class="form-group"><label for="soporte-precinto">Precinto</label><input type="number" id="soporte-precinto" name="Precinto" required></div>
+            <div class="form-group"><label for="soporte-caja-nap">Caja Nap</label><input type="text" id="soporte-caja-nap" name="Caja Nap" required></div>
+            <div class="form-group"><label for="soporte-coordenadas">Coordenadas</label><div class="form-group-inline"><input type="text" id="soporte-coordenadas" name="Coordenadas" required readonly placeholder="Presione el botón para capturar"><button type="button" id="get-coords-btn" class="btn-secondary">📍</button></div></div>
+            <div class="grid-columns"><div class="form-group"><label for="soporte-cantidad-puertos">Cantidad de Puertos</label><select id="soporte-cantidad-puertos" name="Cantidad de Puertos" required><option value="8">8</option><option value="16">16</option><option value="32">32</option></select></div><div class="form-group"><label for="soporte-puerto-cliente">Puerto cliente</label><input type="number" id="soporte-puerto-cliente" name="Puerto cliente" min="1" max="32" required></div></div>
+            <div class="form-group"><label for="soporte-potencia">Potencia</label><input type="number" id="soporte-potencia" name="Potencia" min="-30" max="5" step="any" required></div>
+            <div class="form-group"><label for="soporte-zona">Zona</label><input type="text" id="soporte-zona" name="Zona" required></div>
+            <div class="form-group"><label for="soporte-estatus">Estatus</label><select id="soporte-estatus" name="Estatus" required><option value="Realizado">Realizado</option><option value="Reagendado">Reagendado</option><option value="No se obtuvo respuesta">No se obtuvo respuesta</option></select></div>
+            <div class="form-group"><label for="soporte-causa">Causa</label><input type="text" id="soporte-causa" name="Causa" required></div>
+            <div class="form-group"><label for="soporte-accion">Acción Realizada</label><textarea id="soporte-accion" name="Accion Realizada" rows="3" placeholder="Ej: Se realizaron ambos conectores mejorando la potencia..."></textarea></div>
+            <div class="grid-columns"><div class="form-group"><label for="soporte-conectores">Conectores utilizados</label><input type="number" id="soporte-conectores" name="Conectores utilizados" min="1" max="10"></div><div class="form-group"><label for="soporte-metraje">Metraje utilizado</label><input type="text" id="soporte-metraje" name="Metraje utilizado"></div></div>
+            <div class="form-group"><label for="soporte-observaciones">Observaciones Adicionales</label><textarea id="soporte-observaciones" name="Observaciones Adicionales" rows="3"></textarea></div>
+            <div class="form-group"><label for="soporte-realizado-por">Realizado por</label><input type="text" id="soporte-realizado-por" name="Realizado por" required></div>
+            
+            <div id="status-message" class="status-message"></div>
+            <div class="form-buttons"><button type="submit" class="btn-primary">Guardar y Enviar</button></div>
+        </form>
+    </div>
+    <script src="soporte-script.js"></script>
+</body>
+</html>
