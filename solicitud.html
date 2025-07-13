@@ -24,15 +24,6 @@
             <div class="form-group"><label for="sector">Sector</label><input type="text" id="sector" name="Sector" required></div>
             <div class="form-group"><label for="calle">Calle o Avenida</label><input type="text" id="calle" name="Calle" required></div>
             <div class="form-group"><label for="casa">Casa o Edificio</label><input type="text" id="casa" name="Casa" required></div>
-            
-            <div class="form-group">
-                <label for="solicitud-coordenadas">Coordenadas (Opcional)</label>
-                <div class="form-group-inline">
-                    <input type="text" id="solicitud-coordenadas" name="Coordenadas" readonly placeholder="Presione el botón para capturar">
-                    <button type="button" id="get-coords-btn" class="btn-secondary">📍</button>
-                </div>
-            </div>
-
             <div class="form-group"><label for="email">Correo electrónico</label><input type="email" id="email" name="Email" placeholder="ejemplo@correo.com" required></div>
             <div class="form-group"><label for="servicio">Tipo de Servicio</label><select id="servicio" name="Servicio" required><option value="" disabled selected>Seleccione</option><option value="Domiciliario">Domiciliario</option><option value="Empresarial">Empresarial</option></select></div>
             <div class="form-group"><label for="disponibilidad">Disponibilidad para Instalación</label><input type="date" id="disponibilidad" name="Disponibilidad" required></div>
@@ -44,6 +35,36 @@
             </div>
         </form>
     </div>
-    <script src="solicitud-script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFSdZkmu6Ri0y8cuMTFoVgTA0mhCD24yHm6HH7nRSLfCughrwdwbzx__MyY9-pVaX47Q/exec';
+            const form = document.getElementById('solicitudForm');
+            const statusMessage = document.getElementById('status-message');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                submitButton.disabled = true;
+                submitButton.textContent = 'Guardando...';
+                
+                fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form)})
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result !== 'success') throw new Error(data.message || 'Error desconocido');
+                        form.reset();
+                        statusMessage.className = 'status-message success';
+                        statusMessage.textContent = '¡Solicitud guardada con éxito!';
+                    })
+                    .catch(error => {
+                        statusMessage.className = 'status-message error';
+                        statusMessage.textContent = `Error: ${error.message}`;
+                    })
+                    .finally(() => {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Guardar y Enviar';
+                    });
+            });
+        });
+    </script>
 </body>
 </html>
