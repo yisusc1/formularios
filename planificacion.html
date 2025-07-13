@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificación de Instalaciones</title>
+    <link rel="stylesheet" href="minimal-style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>Planificación de Instalaciones</h1>
+            <p>Asigna las solicitudes pendientes a los equipos de trabajo.</p>
+        </div>
+        <form id="planificacionForm">
+            <input type="hidden" name="formType" value="planificacion">
+
+            <div class="grid-columns">
+                <div class="form-group">
+                    <label for="fecha-asignada">Fecha a Realizar</label>
+                    <input type="date" id="fecha-asignada" name="fecha_asignada" required>
+                </div>
+                <div class="form-group">
+                    <label for="equipo-asignado">Equipo a Asignar</label>
+                    <select id="equipo-asignado" name="equipo_asignado" required>
+                        <option value="" disabled selected>Seleccione un equipo</option>
+                        <option value="Equipo A">Equipo A</option>
+                        <option value="Equipo B">Equipo B</option>
+                        <option value="Equipo C">Equipo C</option>
+                        <option value="Equipo D">Equipo D</option>
+                        <option value="Equipo E">Equipo E</option>
+                        <option value="Equipo F">Equipo F</option>
+                        <option value="Equipo G">Equipo G</option>
+                        <option value="Equipo H">Equipo H</option>
+                        <option value="Equipo I">Equipo I</option>
+                        <option value="Equipo J">Equipo J</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr style="margin: 2rem 0;">
+
+            <div class="form-group">
+                <h3>Solicitudes Pendientes</h3>
+                <div id="pending-list-container" style="max-height: 300px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 1rem;">
+                    <p id="loading-message">Cargando solicitudes pendientes...</p>
+                    </div>
+            </div>
+            
+            <div id="status-message" class="status-message"></div>
+            <div class="form-buttons">
+                <button type="submit" class="btn-primary">Guardar Planificación</button>
+            </div>
+        </form>
+    </div>
+    <script src="planificacion-script.js"></script>
+</body>
+</html>
