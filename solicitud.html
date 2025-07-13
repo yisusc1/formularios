@@ -14,6 +14,7 @@
         </div>
         <form id="solicitudForm">
             <input type="hidden" name="formType" value="solicitud">
+            
             <div class="form-group"><label for="fecha">Fecha de Solicitud</label><input type="date" id="fecha" name="Fecha" required></div>
             <div class="form-group"><label for="nombre">Nombre y Apellido</label><input type="text" id="nombre" name="Nombre" placeholder="Ej: Ana Pérez" required></div>
             <div class="form-group"><label for="cedula">Cédula</label><input type="number" id="cedula" name="Cedula" placeholder="V-12345678" min="1000000" max="99999999" required></div>
@@ -24,14 +25,23 @@
             <div class="form-group"><label for="sector">Sector</label><input type="text" id="sector" name="Sector" required></div>
             <div class="form-group"><label for="calle">Calle o Avenida</label><input type="text" id="calle" name="Calle" required></div>
             <div class="form-group"><label for="casa">Casa o Edificio</label><input type="text" id="casa" name="Casa" required></div>
+
+            <div class="form-group">
+                <label for="solicitud-coordenadas">Coordenadas (Opcional)</label>
+                <div class="form-group-inline">
+                    <input type="text" id="solicitud-coordenadas" name="Coordenadas" readonly placeholder="Presione el botón para capturar">
+                    <button type="button" id="get-coords-btn" class="btn-secondary">📍</button>
+                </div>
+            </div>
+
             <div class="form-group"><label for="email">Correo electrónico</label><input type="email" id="email" name="Email" placeholder="ejemplo@correo.com" required></div>
             <div class="form-group"><label for="servicio">Tipo de Servicio</label><select id="servicio" name="Servicio" required><option value="" disabled selected>Seleccione</option><option value="Domiciliario">Domiciliario</option><option value="Empresarial">Empresarial</option></select></div>
             <div class="form-group"><label for="disponibilidad">Disponibilidad para Instalación</label><input type="date" id="disponibilidad" name="Disponibilidad" required></div>
-            <div class="form-group"><label for="asesor">Asesor</label><select id="asesor" name="Asesor" required><option value="" disabled selected>Seleccione</option><option value="Yaisen Herrera">Yaisen Herrera</option><option value="Lorena Esqueda">Lorena Esqueda</option><option value="Cindy Infante">Cindy Infante</option><option value="Randy Moreno">Randy Moreno</option><option value="Otro">Otro</option></select><input type="text" id="otro_asesor" name="otro_asesor" class="hidden-field" placeholder="Escriba el nombre del asesor"></div>
-            <div class="form-group"><label for="fuente">¿Cómo nos conoció?</label><select id="fuente" name="Fuente" required><option value="" disabled selected>Seleccione</option><option value="Folleto">Folleto</option><option value="Valla Publicitaria">Valla Publicitaria</option><option value="Evento">Evento</option><option value="Redes Sociales">Redes Sociales</option><option value="Recomendación">Recomendación</option><option value="Otro">Otro</option></select><input type="text" id="otra_fuente" name="otra_fuente" class="hidden-field" placeholder="Escriba el tipo de fuente"></div>
+            <div class="form-group"><label for="asesor">Asesor</label><select id="asesor" name="Asesor" required><option value="" disabled selected>Seleccione</option><option value="Yaisen Herrera">Yaisen Herrera</option><option value="Lorena Esqueda">Lorena Esqueda</option><option value="Cindy Infante">Cindy Infante</option><option value="Randy Moreno">Randy Moreno</option><option value="Otro">Otro</option></select></div>
+            <div class="form-group"><label for="fuente">¿Cómo nos conoció?</label><select id="fuente" name="Fuente" required><option value="" disabled selected>Seleccione</option><option value="Folleto">Folleto</option><option value="Valla Publicitaria">Valla Publicitaria</option><option value="Evento">Evento</option><option value="Redes Sociales">Redes Sociales</option><option value="Recomendación">Recomendación</option><option value="Otro">Otro</option></select></div>
             <div id="status-message" class="status-message"></div>
             <div class="form-buttons">
-                <button type="submit" class="btn-primary">Guardar y Enviar</button>
+                <button type="submit" class="btn-primary">Guardar y Enviar a WhatsApp</button>
             </div>
         </form>
     </div>
@@ -39,29 +49,92 @@
         document.addEventListener('DOMContentLoaded', () => {
             const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFSdZkmu6Ri0y8cuMTFoVgTA0mhCD24yHm6HH7nRSLfCughrwdwbzx__MyY9-pVaX47Q/exec';
             const form = document.getElementById('solicitudForm');
-            const statusMessage = document.getElementById('status-message');
-            const submitButton = form.querySelector('button[type="submit"]');
+            
+            // --- LÓGICA DE COORDENADAS AÑADIDA ---
+            const coordsBtn = document.getElementById('get-coords-btn');
+            const coordsInput = document.getElementById('solicitud-coordenadas');
+            coordsBtn.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    coordsInput.value = 'Geolocalización no soportada.';
+                    return;
+                }
+                coordsInput.placeholder = 'Obteniendo coordenadas precisas...';
+                const options = { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(6);
+                        const lon = position.coords.longitude.toFixed(6);
+                        coordsInput.value = `${lat},${lon}`;
+                    }, 
+                    (error) => {
+                        coordsInput.placeholder = 'No se pudo obtener la ubicación.';
+                        console.error('Error de Geolocalización:', error);
+                    }, 
+                    options
+                );
+            });
 
             form.addEventListener('submit', e => {
                 e.preventDefault();
+
+                const formData = new FormData(form);
+                const submitButton = form.querySelector('button[type="submit"]');
+                const statusMessage = document.getElementById('status-message');
+
+                // --- LÓGICA DE WHATSAPP CON COORDENADAS ---
+                const messageParts = [
+                    '*--- Nueva Solicitud de Servicio ---*', '',
+                    `*Fecha de Solicitud:* ${new Date(formData.get('Fecha') + 'T00:00:00').toLocaleDateString('es-ES')}`,
+                    `*Nombre y Apellido:* ${formData.get('Nombre')}`,
+                    `*Cédula:* ${formData.get('Cedula')}`,
+                    `*Contacto:* ${formData.get('Contacto')}`
+                ];
+                if (formData.get('Contacto2')) { messageParts.push(`*Contacto 2:* ${formData.get('Contacto2')}`); }
+                messageParts.push(
+                    `*Ubicación:* ${formData.get('Ubicacion')}, ${formData.get('Municipio')}`,
+                    `*Sector:* ${formData.get('Sector')}`, `*Calle/Avenida:* ${formData.get('Calle')}`, `*Casa/Edif:* ${formData.get('Casa')}`
+                );
+                
+                const coordenadas = formData.get('Coordenadas');
+                if (coordenadas) {
+                    messageParts.push(`*Coordenadas:* https://www.google.com/maps?q=${coordenadas}`);
+                }
+
+                messageParts.push(
+                    `*Correo electrónico:* ${formData.get('Email')}`, `*Tipo de Servicio:* ${formData.get('Servicio')}`,
+                    `*Disponibilidad para instalación:* ${new Date(formData.get('Disponibilidad') + 'T00:00:00').toLocaleDateString('es-ES')}`,
+                    `*Asesor:* ${formData.get('Asesor')}`, `*Fuente:* ${formData.get('Fuente')}`
+                );
+                const message = messageParts.join('\n');
+                
+                const whatsappTab = window.open('', '_blank');
+                whatsappTab.document.write('<html><body><h3>Revisa tu mensaje...</h3><p>Guardando datos y conectando con WhatsApp...</p></body></html>');
+                
                 submitButton.disabled = true;
                 submitButton.textContent = 'Guardando...';
-                
-                fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form)})
+
+                fetch(SCRIPT_URL, { method: 'POST', body: formData })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.result !== 'success') throw new Error(data.message || 'Error desconocido');
+                        if (data.result !== 'success') {
+                            throw new Error(data.message || 'Error desconocido del servidor.');
+                        }
+                        
+                        whatsappTab.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                        
                         form.reset();
                         statusMessage.className = 'status-message success';
                         statusMessage.textContent = '¡Solicitud guardada con éxito!';
                     })
                     .catch(error => {
+                        whatsappTab.close();
                         statusMessage.className = 'status-message error';
                         statusMessage.textContent = `Error: ${error.message}`;
                     })
                     .finally(() => {
                         submitButton.disabled = false;
-                        submitButton.textContent = 'Guardar y Enviar';
+                        submitButton.textContent = 'Guardar y Enviar a WhatsApp';
                     });
             });
         });
